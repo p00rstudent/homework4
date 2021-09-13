@@ -10,6 +10,7 @@ class BasePage(Element):
         return self._url
 
     def load(self):
+        self.logger.info(f'Loading url: {self.url}')
         return self.driver.get(self.url)
 
 

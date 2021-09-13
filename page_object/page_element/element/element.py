@@ -1,3 +1,6 @@
+import logging
+
+import allure
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains
@@ -8,6 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 class Element:
     def __init__(self, driver: webdriver):
         self.driver = driver
+        self.logger = logging.getLogger(type(self).__name__)
 
     def check_element(self,
                       locator,
@@ -17,8 +21,16 @@ class Element:
                       ignored_exceptions=None):
         wait = WebDriverWait(self.driver, timeout, poll_frequency, ignored_exceptions)
         try:
+            self.logger.info(f'Check element, locator: {locator}, method: {method}')
             wait.until(method(locator))
+            self.logger.info('Element found')
         except TimeoutException:
+            self.logger.error(f'Element {locator} not found')
+            allure.attach(
+                body=self.driver.get_screenshot_as_png(),
+                name=f'{locator} not found attach',
+                attachment_type=allure.attachment_type.PNG
+            )
             raise AssertionError(f'Wait until timeout, element: {locator}')
 
     def find_element(self, locator: tuple, time: float = 10):

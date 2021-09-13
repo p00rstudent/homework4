@@ -1,19 +1,24 @@
 from random import choice, randint
 
+import allure
 import pytest
 from selenium.webdriver.common.by import By
 
 
+@allure.title("Check elements on pages")
 def test_pages_check(main_page, register_page, login_page, iphone_page, admin_page):
     for page in (main_page, register_page, login_page, iphone_page, admin_page):
-        page.check()
+        with allure.step(f'Check {page}'):
+            page.check()
 
 
+@allure.title("Check changes of currencies on main page")
 def test_change_currency(main_page):
     main_page.load()
     for currency in main_page.top_container.CURRENCIES:
-        main_page.top_container.change_currency(currency)
-        assert main_page.top_container.currency == main_page.top_container.CURRENCIES[currency]
+        with allure.step(f'Check {currency}'):
+            main_page.top_container.change_currency(currency)
+            assert main_page.top_container.currency == main_page.top_container.CURRENCIES[currency]
 
 
 def test_account_registration(register_page):
@@ -43,6 +48,7 @@ def test_login_warning(login_page):
     login_page.check_login_warning()
 
 
+#@allure.title(f'Check count of elements on iphone_page, {element}')
 @pytest.mark.parametrize('element',
                          [
                              ((By.CSS_SELECTOR, 'li'), 76),
@@ -54,12 +60,19 @@ def test_check_iphone_elements_count(browser, iphone_page, element):
     assert iphone_page.get_elements_count(element[0]) == element[1]
 
 
+#@allure.title(f'Check product addition and deletion, product: {product}, admin account: {account}')
 @pytest.mark.parametrize('account', [{'username': 'user', 'password': 'bitnami'}])
 @pytest.mark.parametrize('product', [{'name': 'name', 'meta_title': 'title', 'model': 'model'}])
 def test_admin_page_add_and_delete_product(admin_page, account, product):
-    admin_page.login(account)
-    admin_page.add_product(product)
-    admin_page.filter_product_by_name(product['name'])
+    with allure.step(f'Login into admin account'):
+        admin_page.login(account)
+    with allure.step(f'Add product'):
+        admin_page.add_product(product)
+    with allure.step(f'Find product'):
+        admin_page.filter_product_by_name(product['name'])
     assert admin_page.filter_product_count() == 1
-    admin_page.click_filter_checkbox_by_index(0)
-    admin_page.delete_selected_product()
+    with allure.step(f'Delete product'):
+        with allure.step(f'Select product'):
+            admin_page.click_filter_checkbox_by_index(0)
+            with allure.step(f'Delete selected product'):
+                admin_page.delete_selected_product()

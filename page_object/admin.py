@@ -31,6 +31,7 @@ class AdminPage(BaseOpenCartPage):
         self._url = base_url + '/admin'
 
     def login(self, account: dict):
+        self.logger.info(f'Login, account: {account}')
         if self.driver.current_url != self.url:
             self.load()
         self.check()
@@ -49,6 +50,7 @@ class AdminPage(BaseOpenCartPage):
             self.check_element(locator)
 
     def add_product(self, product: dict):
+        self.logger.info(f'Add product, product: {product}')
         self.open_products()
         self.click_by_locator(self.PRODUCT_ADD)
         self.fill_product(product)
@@ -56,6 +58,7 @@ class AdminPage(BaseOpenCartPage):
         self.check_element(self.PRODUCT_SUCCESS, EC.visibility_of_element_located)
 
     def open_products(self):
+        self.logger.info(f'Open products subwindow')
         catalog = self.find_element(self.CATALOG)
         if not self.catalog_is_active(catalog):
             catalog.click()
@@ -69,12 +72,14 @@ class AdminPage(BaseOpenCartPage):
         return catalog.find_elements(By.TAG_NAME, 'a')[0].get_attribute('aria-expanded')
 
     def fill_product(self, product: dict):
+        self.logger.info(f'Filling products fields for addition')
         self.insert_text_by_locator(self.PRODUCT_NAME, product['name'])
         self.insert_text_by_locator(self.PRODUCT_META_TITLE, product['meta_title'])
         self.click_by_locator(self.PRODUCT_DATA)
         self.insert_text_by_locator(self.PRODUCT_MODEL, product['model'])
 
     def filter_product_by_name(self, name):
+        self.logger.info(f'Search products by name: {name}')
         self.insert_text_by_locator(self.PRODUCT_FILTER_NAME, name)
         self.click_by_locator(self.PRODUCT_FILTER_BUTTON)
 

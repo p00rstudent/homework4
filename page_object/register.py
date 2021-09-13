@@ -20,6 +20,7 @@ class RegisterPage(BaseOpenCartPage):
         self._url = base_url + '/index.php?route=account/register'
 
     def register_account(self, account: dict):
+        self.logger.info(f'Register account: {account}')
         if self.driver.current_url != self.url:
             self.load()
         self.check()
