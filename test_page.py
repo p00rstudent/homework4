@@ -48,7 +48,6 @@ def test_login_warning(login_page):
     login_page.check_login_warning()
 
 
-#@allure.title(f'Check count of elements on iphone_page, {element}')
 @pytest.mark.parametrize('element',
                          [
                              ((By.CSS_SELECTOR, 'li'), 76),
@@ -60,7 +59,6 @@ def test_check_iphone_elements_count(browser, iphone_page, element):
     assert iphone_page.get_elements_count(element[0]) == element[1]
 
 
-#@allure.title(f'Check product addition and deletion, product: {product}, admin account: {account}')
 @pytest.mark.parametrize('account', [{'username': 'user', 'password': 'bitnami'}])
 @pytest.mark.parametrize('product', [{'name': 'name', 'meta_title': 'title', 'model': 'model'}])
 def test_admin_page_add_and_delete_product(admin_page, account, product):
