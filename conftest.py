@@ -2,7 +2,6 @@ import logging
 from pathlib import Path
 
 import pytest
-import allure
 from selenium import webdriver
 
 from page_object.admin import AdminPage
@@ -12,7 +11,8 @@ from page_object.page_element.login import LoginPage
 from page_object.register import RegisterPage
 
 DRIVERS_DIRECTORY = Path(__file__).parent.parent.joinpath('drivers')
-
+LOGS_DIRECTORY = Path(__file__).parent.joinpath('logs')
+LOGS_DIRECTORY.mkdir(exist_ok=True)
 logging.basicConfig(level=logging.INFO, filename="logs/selenium.log")
 
 
