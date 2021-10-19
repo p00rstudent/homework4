@@ -61,6 +61,7 @@ def test_check_iphone_elements_count(browser, iphone_page, element):
 
 @pytest.mark.parametrize('account', [{'username': 'user', 'password': 'bitnami'}])
 @pytest.mark.parametrize('product', [{'name': 'name', 'meta_title': 'title', 'model': 'model'}])
+@pytest.mark.skip
 def test_admin_page_add_and_delete_product(admin_page, account, product):
     with allure.step(f'Login into admin account'):
         admin_page.login(account)
