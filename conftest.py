@@ -65,10 +65,9 @@ def browser(request):
     driver.maximize_window()
 
     def fin():
-        with open('allure-results/environment.properties', 'w') as f:
-            f.write(f"Browser={request.config.getoption('--browser')}\n")
-            f.write(f"Browser.Version={request.config.getoption('--bversion')}\n")
-            f.write(f"Executor={request.config.getoption('--executor')}")
+        allure_dir = Path(__file__).parent.joinpath('allure-results')
+        allure_dir.mkdir(exist_ok=True)
+        allure_dir.joinpath('environment.properties').write_text(f"Browser={request.config.getoption('--browser')}\nBrowser.Version={request.config.getoption('--bversion')}\nExecutor={request.config.getoption('--executor')}\n")
         driver.quit()
 
     request.addfinalizer(fin)
